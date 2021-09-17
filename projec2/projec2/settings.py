@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +27,15 @@ SECRET_KEY = 'django-insecure-25fz8c9sy31#!9tbqh@#!!4%0&m)tw49p@4^x@c0zev#eix425
 DEBUG = True
 
 ALLOWED_HOSTS = []
+CORS_ALLOWED_ORIGINS = [
+    "https://www.test-cors.org",
+]
 
+CSRF_TRUSTED_ORIGINS = [
+    'www.test-cors.org',
+]
+
+CORS_ALLOW_CREDENTIALS = True
 
 # Application definition
 
@@ -41,16 +50,29 @@ INSTALLED_APPS = [
     'rest_framework',
     "corsheaders",
     'rest_framework_simplejwt',
+    'rest_flex_fields',
+    'django_filters',
+    'versatileimagefield',
       
     
 ]
-
-# REST_FRAMEWORK = {
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+REST_FRAMEWORK = {
 #     'DEFAULT_AUTHENTICATION_CLASSES':(
 #         'rest_framework_simplejwt.authentication.JWTAuthentication'
-#     )
-# }
-
+#     ),
+     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+ }
+ 
+VERSATILEIMAGEFIELD_RENDITION_KEY_SETS = {
+    'product_headshot': [
+        ('full_size', 'url'),
+        ('thumbnail', 'thumbnail__100x100'),
+        ('medium_square_crop', 'crop__400x400'),
+        ('small_square_crop', 'crop__50x50')
+    ]
+}
 MIDDLEWARE = [
       "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
